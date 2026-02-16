@@ -3,26 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice</title>
+    <title>Pro Video Call App</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; }
-        button { padding: 15px 30px; font-size: 18px; cursor: pointer; }
-        #status { margin-top: 20px; color: green; font-weight: bold; }
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; background: #f0f2f5; margin: 0; padding: 20px; }
+        
+        /* ভিডিও কন্টেইনার */
+        .video-container { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
+        video { width: 45%; max-width: 600px; border-radius: 10px; background: #000; border: 2px solid #ddd; }
+        
+        /* কন্ট্রোল বাটন */
+        .controls { margin-top: 15px; display: none; }
+        button { padding: 10px 20px; font-size: 16px; margin: 5px; cursor: pointer; border: none; border-radius: 5px; color: white; }
+        .btn-green { background: #28a745; }
+        .btn-red { background: #dc3545; }
+        .btn-blue { background: #007bff; }
+        .btn-dark { background: #343a40; }
+
+        /* প্যানেল (লগিন/কল) */
+        #login-panel, #call-panel, #incoming-call-panel { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: inline-block; margin-bottom: 20px; }
+        input { padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; }
+        
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <h1>Free Voice System</h1>
-    
-    <audio id="localAudio" autoplay muted></audio>
-    
-    <audio id="remoteAudio" autoplay></audio>
 
-    <button id="callBtn">Call Now</button>
-    <div id="status">Ready to call...</div>
+    <h1>WebRTC Video Call</h1>
+
+    <div id="login-panel">
+        <h3>Set Your Username</h3>
+        <input type="text" id="username-input" placeholder="Enter unique name">
+        <button onclick="registerUser()" class="btn-blue">Set Username</button>
+    </div>
+
+    <div id="call-panel" class="hidden">
+        <h3>Hello, <span id="my-username" style="color: blue;"></span></h3>
+        <input type="text" id="target-username" placeholder="Enter friend's username">
+        <button onclick="startCall()" class="btn-green">📞 Call</button>
+    </div>
+
+    <div id="incoming-call-panel" class="hidden">
+        <h3>Incoming Call from <span id="caller-name"></span>...</h3>
+        <button onclick="acceptCall()" class="btn-green">Accept</button>
+        <button onclick="rejectCall()" class="btn-red">Reject</button>
+    </div>
+
+    <div class="video-container">
+        <video id="localVideo" autoplay muted playsinline></video>
+        <video id="remoteVideo" autoplay playsinline></video>
+    </div>
+
+    <div class="controls" id="controls">
+        <button onclick="toggleAudio()" class="btn-dark" id="btn-audio">🎤 Mute</button>
+        <button onclick="toggleVideo()" class="btn-dark" id="btn-video">📷 Video Off</button>
+        <button onclick="toggleScreenShare()" class="btn-blue" id="btn-screen-share">🖥 Share Screen</button>
+        <button onclick="endCall()" class="btn-red">❌ End Call</button>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>
 </body>
-
 </html>
-
